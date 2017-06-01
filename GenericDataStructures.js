@@ -1,5 +1,40 @@
 /**
  * 
+ */
+
+let List = function(){
+    return (type)=>{
+        this.array = [];
+        
+        this.add = (item) =>{
+             if (typeof (item) == type) {
+                 this.array.push(item);
+            } else {
+                throw "item provided does not match " + type + " data type";
+            }
+        }
+
+        this.removeLast = () =>{
+            return this.array.pop();
+        }
+
+        this.removeFront = () =>{
+            return this.array.unshift();
+        }
+
+        this.removeFromIndex = (index) =>{
+           return this.array.splice(index, 1);
+        }
+
+        this.getArray = () =>{
+            return this.array;
+        }
+        return this;
+    }
+}
+
+/**
+ * 
  * @param {*} Size 
  */
 let Queue = function (Size) {
@@ -44,6 +79,7 @@ let Queue = function (Size) {
         return this;
     }
 }
+
 /**
  * 
  * @param {*} Size 
@@ -92,89 +128,104 @@ let Stack = function (Size) {
 
 }
 
-// let LinkedList = function () {
-//     return function (type) {
-//         this.node = function (item) {
-//             if (typeof (item) == type) {
-//                 this.data = item;
-//                 this.next = null;
-//             } else {
-//                 throw "item provided does not match " + type + " data type";
-//             }
-//         }
+/**
+ * Generic LinkedList
+ */
+let LinkedList = function () {
+    return (type) => {
+        this.node = function (item) {
+            if (typeof (item) == type) {
+                this.data = item;
+                this.next = null;
+            } else {
+                throw "item provided does not match " + type + " data type";
+            }
+        }
 
-//         this.List = function () {
-//             this.head = null;
-//             this.Size = 0;
-//             this.add = (item) => {
-//                 let _node = new this.node(),
-//                     currentNode = this.head;
+        this.List = () => {
+            this.head = null;
+            this._size = 0;
 
-//                 if (this.currentNode) {
-//                     this.head = _node;
-//                     this.size++;
-//                     return _node;
-//                 }
+            this.add = (item) => {
+                this._node = new this.node(item);
+                this.currentNode = this.head;
+                if (!this.currentNode) {
+                    this.head = _node;
+                    this._size++;
+                    return _node;
+                }
+                while (this.currentNode.next) {
+                    this.currentNode = this.currentNode.next;
 
-//                 while (currentNode.next) {
-//                     currentNode = currentNode.next;
-//                 }
+                }
+                this.currentNode.next = this._node;
+                this._size++;
+            }
 
-//                 currentNode.next = item;
-//                 this.Size++;
-//             }
-//         }
 
-//         this.searchNodeAt = function (position) {
-//             let count = 1,
-//                 length = this._size,
-//                 currentNode = this.head;
+            this.searchNodeAt = (position) => {
+                this.currentNode = this.head,
+                    this.length = this._size,
+                    this.count = 1;
 
-//             if (length === 0 || position < 1 || position > length) {
-//                 return "No item in the list"
-//             }
+                // check position is invalid
+                if (this.length === 0 || position < 1 || position > this.length) {
+                    throw 'Node does not exists in this list.';
+                }
 
-//             while (count <= position) {
-//                 currentNode = currentNode.next;
-//                 count++;
-//             }
+                // if position valid position 
+                while (this.count < position) {
+                    this.currentNode = this.currentNode.next;
+                    this.count++;
+                }
 
-//             return currentNode;
-//         };
+                return this.currentNode;
+            };
 
-//         this.remove = function (position) {
-//             var currentNode = this.head,
-//                 length = this._size,
-//                 beforeNodeToDelete = null,
-//                 nodeToDelete = null,
-//                 deletedNode = null;
+            this.remove = (position) => {
+                this.currentNode = this.head,
+                    this.length = this._size,
+                    this.beforeNodeToDelete = null,
+                    this.nodeToDelete = null,
+                    this.deletedNode = null;
 
-//             // Invalid position
-//             if (position < 0 || position > length) {
-//                 throw 'Node does not exists in this list.';
-//             }
+                // Invalid position
+                if (position < 0 || position > this.length) {
+                    throw 'Node does not exists in this list.';
+                }
 
-//             // First node is removed
-//             if (position === 1) {
-//                 this.head = currentNode.next;
-//                 deletedNode = currentNode;
-//                 currentNode = null;
-//                 this._size--;
+                // First node is removed
+                if (position === 1) {
+                    this.head = this.currentNode.next;
+                    this.deletedNode = this.currentNode;
+                    this.currentNode = null;
+                    this._size--;
 
-//                 return deletedNode;
-//             }
+                    return deletedNode;
+                }
 
-//             // Other node is removed
-//             beforeNodeToDelete = this.searchNodeAt(position - 1);
-//             nodeToDelete = this.searchNodeAt(position);
+                // Other node is removed
+                this.beforeNodeToDelete = this.searchNodeAt(position - 1);
+                this.nodeToDelete = this.searchNodeAt(position);
 
-//             beforeNodeToDelete.next = nodeToDelete.next;
-//             deletedNode = nodeToDelete;
-//             nodeToDelete = null;
-//             this._size--;
+                this.beforeNodeToDelete.next = this.nodeToDelete.next;
+                this.deletedNode = this.nodeToDelete;
+                this.nodeToDelete = null;
+                this._size--;
 
-//             return "Node Deleted";
-//         };
-//         return this.List();
-//     }
-// }
+                return "Node Deleted";
+            };
+
+
+            return this;
+        };
+        return this.List();
+    }
+}
+
+
+
+
+
+
+
